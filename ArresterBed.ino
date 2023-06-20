@@ -5,12 +5,7 @@
 
 
 const float xCircumference = 16.31555*PI,
-            yCircumference = 16.36183*PI,
-            xDistance = 200.,
-            yDistance = 80.,
-            xDistanceStep = 1.,
-            yDistanceStep = 1.;
-const int numMeasurements = 20;
+            yCircumference = 16.36183*PI;
 unsigned int xMotorPins[4] = {4, 5, 6, 7},
              yMotorPins[4] = {10, 11, 12, 13};
 ButtonStepperMotor xMotor(xMotorPins, 3),
@@ -19,12 +14,12 @@ VL53L1X Distance_Sensor;
 
 
 void sendDistance(float xPosition, float yPosition, int numberSamples) {
+    // TODO: Use sensor properly by toggling the timing.
     float distanceSum = 0;
     for (int sample = 0; sample < numberSamples; sample++) {
         distanceSum += Distance_Sensor.read();
     }
     Serial.println((String) xPosition + "," + (String) yPosition + "," + (String) (distanceSum / numberSamples) + ",");
-    return ;
 }
 
 
@@ -47,9 +42,21 @@ void setup() {
         }
     }
     while (Serial.available() == 0);
+    float xDistance = Serial.readStringUntil('\n').toFloat();
+    while (Serial.available() == 0);
+    float yDistance = Serial.readStringUntil('\n').toFloat();
+    while (Serial.available() == 0);
+    float xDistanceStep = Serial.readStringUntil('\n').toFloat();
+    while (Serial.available() == 0);
+    float yDistanceStep = Serial.readStringUntil('\n').toFloat();
+    while (Serial.available() == 0);
+    int numMeasurements = Serial.readStringUntil('\n').toFloat();
+
+    while (Serial.available() == 0);
     if (Serial.readStringUntil('\n') == "__start__") {
         xMotor.runUntilButtonPressed(-1, 1.1);
         for (int xPosition = 0; xPosition <= xDistance; xPosition+=xDistanceStep) {
+            // TODO: Initialize the sensor only once.
             Distance_Sensor.setTimeout(500);
             if (!Distance_Sensor.init()) {
                 return;
