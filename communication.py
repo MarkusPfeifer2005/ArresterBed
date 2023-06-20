@@ -17,8 +17,18 @@ def main():
         print("Established connection (3-way handshake).")
         if not (data_directory := "Data") in os.listdir():
             os.mkdir(data_directory)
-        print("Checked if directory is available.")
+            print("Created 'Data' directory.")
+        else:
+            print("Checked if 'Data' directory is available.")
+        # TODO: Add a separate json file which holds all additional data for the session.
+        # TODO: Create directory for each Session.
+        # TODO: Add the possibility to stop an ongoing session and continue it afterwards.
         new_filename = f"Data/Distances_{datetime.datetime.now().strftime('%D_%H_%M_%S').replace('/', '_')}.csv"
+        connection.write(f"{3.}\n".encode())  # x distance
+        connection.write(f"{10.}\n".encode())  # y distance
+        connection.write(f"{1.}\n".encode())  # x distance step
+        connection.write(f"{1.}\n".encode())  # y distance step
+        connection.write(f"{20}\n".encode())  # number of measurements
         with open(new_filename, 'a') as csv_file:
             csv_file.write("x [mm],y [mm],z [mm]\n")
         time.sleep(1)
