@@ -13,13 +13,8 @@ ButtonStepperMotor xMotor(xMotorPins, 3),
 VL53L1X Distance_Sensor;
 
 
-void sendDistance(float xPosition, float yPosition, int numberSamples) {
-    // TODO: Use sensor properly by toggling the timing.
-    float distanceSum = 0;
-    for (int sample = 0; sample < numberSamples; sample++) {
-        distanceSum += Distance_Sensor.read();
-    }
-    Serial.println((String) xPosition + "," + (String) yPosition + "," + (String) (distanceSum / numberSamples) + ",");
+void sendDistance(float xPosition, float yPosition) {
+    Serial.println((String) xPosition + "," + (String) yPosition + "," + (String) Distance_Sensor.read() + ",");
 }
 
 
@@ -49,32 +44,32 @@ void setup() {
     float xDistanceStep = Serial.readStringUntil('\n').toFloat();
     while (Serial.available() == 0);
     float yDistanceStep = Serial.readStringUntil('\n').toFloat();
-    while (Serial.available() == 0);
-    int numMeasurements = Serial.readStringUntil('\n').toFloat();
+
+    Distance_Sensor.setTimeout(800);
+    if (!Distance_Sensor.init()) {
+        return;
+    }
+    Distance_Sensor.setDistanceMode(VL53L1X::Short);
+    Distance_Sensor.setMeasurementTimingBudget(500000);
+    Distance_Sensor.startContinuous(25);
+    while (Distance_Sensor.read() == 0);
+    
 
     while (Serial.available() == 0);
     if (Serial.readStringUntil('\n') == "__start__") {
         xMotor.runUntilButtonPressed(-1, 1.1);
         for (int xPosition = 0; xPosition <= xDistance; xPosition+=xDistanceStep) {
-            // TODO: Initialize the sensor only once.
-            Distance_Sensor.setTimeout(500);
-            if (!Distance_Sensor.init()) {
-                return;
-            }
-            Distance_Sensor.setDistanceMode(VL53L1X::Short);
-            Distance_Sensor.setMeasurementTimingBudget(50000);
-            Distance_Sensor.startContinuous(50);
             yMotor.runUntilButtonPressed(1, 1.1);
             int yPosition = 0;
             for (; yPosition <= yDistance; yPosition+=yDistanceStep) {
-                sendDistance(xPosition, yPosition, numMeasurements);
-                yMotor.runAngleDeg((-1 * 360) / yCircumference, .5, 1.1, false);
+                sendDistance(xPosition, yPosition);
+                yMotor.runAngleDeg((-1 * 360) / yCircumference, .5, 1.1, false);  // FIXME: Implement yDistanceStep
             }
             yPosition-=yDistanceStep;
             xMotor.runAngleDeg((1 * 360) / xCircumference, .5, 1.1, false);
             xPosition += xDistanceStep;
             for (; yPosition >= 0; yPosition-=yDistanceStep) {
-                sendDistance(xPosition, yPosition, numMeasurements);
+                sendDistance(xPosition, yPosition);
                 yMotor.runAngleDeg((1 * 360) / yCircumference, .5, 1.1, false);
             }
             xMotor.runAngleDeg((1 * 360) / xCircumference, .5, 1.1, false);
