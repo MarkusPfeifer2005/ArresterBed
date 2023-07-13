@@ -24,8 +24,8 @@ def main():
         # TODO: Create directory for each Session.
         # TODO: Add the possibility to stop an ongoing session and continue it afterwards.
         new_filename = f"Data/Distances_{datetime.datetime.now().strftime('%D_%H_%M_%S').replace('/', '_')}.csv"
-        connection.write(f"{170.}\n".encode())  # x distance
-        connection.write(f"{70.}\n".encode())  # y distance
+        connection.write(f"{250.}\n".encode())  # x distance
+        connection.write(f"{80.}\n".encode())  # y distance
         connection.write(f"{1.}\n".encode())  # x distance step
         connection.write(f"{1.}\n".encode())  # y distance step
         with open(new_filename, 'a') as csv_file:
