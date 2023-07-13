@@ -14,7 +14,7 @@ VL53L1X Distance_Sensor;
 
 
 void sendDistance(float xPosition, float yPosition) {
-    Serial.println((String) xPosition + "," + (String) yPosition + "," + (String) Distance_Sensor.read() + ",");
+    Serial.println((String) xPosition + "," + (String) yPosition + "," + (String) Distance_Sensor.read());
 }
 
 
@@ -50,8 +50,8 @@ void setup() {
         return;
     }
     Distance_Sensor.setDistanceMode(VL53L1X::Short);
-    Distance_Sensor.setMeasurementTimingBudget(500000);
-    Distance_Sensor.startContinuous(25);
+    Distance_Sensor.setMeasurementTimingBudget(1000000);
+    Distance_Sensor.startContinuous(20);
     while (Distance_Sensor.read() == 0);
     
 
