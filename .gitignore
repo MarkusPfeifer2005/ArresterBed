@@ -1,3 +1,4 @@
 Data/
 venv/
-.idea/
+.idea
+material_properties/
