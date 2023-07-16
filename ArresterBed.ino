@@ -66,6 +66,9 @@ void setup() {
                 yMotor.runAngleDeg((-1 * 360) / yCircumference, .5, 1.1, false);  // FIXME: Implement yDistanceStep
             }
             yPosition-=yDistanceStep;
+            if (xPosition == xDistance) {
+                break;
+            }
             xMotor.runAngleDeg((1 * 360) / xCircumference, .5, 1.1, false);
             xPosition += xDistanceStep;
             for (; yPosition >= 0; yPosition-=yDistanceStep) {
