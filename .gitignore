@@ -2,3 +2,5 @@ Data/
 venv/
 .idea
 material_properties/
+*.log
+__pycache__/

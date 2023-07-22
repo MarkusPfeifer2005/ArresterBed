@@ -48,7 +48,7 @@ def main():
         time0 = datetime.datetime.now()
         while (message := connection.readline().decode().replace("\r", "")) != "__close__\n":
             time1 = datetime.datetime.now()
-            logging.debug(message.replace("\n", "") + f"\t{time1-time0}")
+            logging.info(message.replace("\n", "") + f"\t{time1-time0}")
             time0 = time1
             with open(new_filename, 'a') as csv_file:
                 csv_file.write(message)
