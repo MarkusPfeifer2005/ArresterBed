@@ -63,7 +63,7 @@ void setup() {
             int yPosition = 0;
             for (; yPosition <= yDistance; yPosition+=yDistanceStep) {
                 sendDistance(xPosition, yPosition);
-                yMotor.runAngleDeg((-1 * 360) / yCircumference, .5, 1.1, false);  // FIXME: Implement yDistanceStep
+                yMotor.runAngleDeg((-yDistanceStep * 360) / yCircumference, .5, 1.1, false);
             }
             yPosition-=yDistanceStep;
             if (xPosition == xDistance) {
@@ -73,9 +73,9 @@ void setup() {
             xPosition += xDistanceStep;
             for (; yPosition >= 0; yPosition-=yDistanceStep) {
                 sendDistance(xPosition, yPosition);
-                yMotor.runAngleDeg((1 * 360) / yCircumference, .5, 1.1, false);
+                yMotor.runAngleDeg((yDistanceStep * 360) / yCircumference, .5, 1.1, false);
             }
-            xMotor.runAngleDeg((1 * 360) / xCircumference, .5, 1.1, false);
+            xMotor.runAngleDeg((xDistanceStep * 360) / xCircumference, .5, 1.1, false);
         }
         Serial.println("__close__");
     }
